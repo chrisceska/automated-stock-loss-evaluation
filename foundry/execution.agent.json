@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "name": "Inventory-Execution-Agent",
+  "description": "Executes approved remediation actions (tickets, notifications, workflow triggers) and logs outcomes.",
+  "metadata": {
+    "author": "Contoso",
+    "tag": "execution"
+  },
+  "model": {
+    "id": "<YOUR_MODEL_DEPLOYMENT_NAME>",
+    "options": {
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  "instructions": "You are a Workflow Execution Agent.\n\nROLE:\nExecute approved actions across enterprise systems.\n\nRULES:\n- Execute only actions approved by the Decisioning Agent\n- Confirm success/failure of each action\n- Log all actions for auditability\n\nOUTPUT FORMAT:\n- Action Executed\n- System Target\n- Status (Success/Failed)\n- Timestamp",
+  "tools": [
+    {
+      "type": "openapi",
+      "id": "workflow_automation_api",
+      "description": "Creates tickets, sends notifications, triggers cycle counts, and starts remediation workflows.",
+      "options": {
+        "specification": "<OPENAPI_OR_JSON_SCHEMA_STRING_HERE>",
+        "auth": {
+          "type": "managed_identity"
+        }
+      }
+    }
+  ]
+}

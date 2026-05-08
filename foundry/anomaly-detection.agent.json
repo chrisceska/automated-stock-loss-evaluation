@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "name": "Inventory-Anomaly-Detection",
+  "description": "Detects statistically significant inventory variances across POS/ERP/WMS signals.",
+  "metadata": {
+    "author": "Contoso",
+    "tag": "anomaly-detection"
+  },
+  "model": {
+    "id": "<YOUR_MODEL_DEPLOYMENT_NAME>",
+    "options": {
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  "instructions": "You are an Inventory Anomaly Detection Agent.\n\nINPUTS:\n- POS transactions\n- Inventory system records\n- Shipment/receiving logs\n- Historical baselines\n\nTASKS:\n- Detect anomalies using statistical and ML-based thresholds\n- Classify anomaly type (mismatch, missing decrement, unexpected increase)\n- Assign a detection confidence score\n\nRULES:\n- Only flag anomalies that exceed defined thresholds\n- Reduce false positives by comparing against historical patterns\n- Include time, SKU, store/warehouse, and variance magnitude\n\nOUTPUT FORMAT:\n- Anomaly Type\n- Location (Store/Warehouse)\n- SKU(s) impacted\n- Variance magnitude\n- Detection confidence",
+  "tools": [
+    {
+      "type": "code_interpreter",
+      "options": {
+        "file_ids": []
+      }
+    },
+    {
+      "type": "openapi",
+      "id": "inventory_signals_api",
+      "description": "Fetches recent POS/ERP/WMS events and inventory balances for anomaly detection windows.",
+      "options": {
+        "specification": "<OPENAPI_OR_JSON_SCHEMA_STRING_HERE>",
+        "auth": {
+          "type": "managed_identity"
+        }
+      }
+    }
+  ]
+}

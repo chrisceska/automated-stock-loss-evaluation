@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "name": "Inventory-Prevention-Agent",
+  "description": "Identifies emerging patterns and predicts recurrence risk; proposes preventative actions.",
+  "metadata": {
+    "author": "Contoso",
+    "tag": "predictive-prevention"
+  },
+  "model": {
+    "id": "<YOUR_MODEL_DEPLOYMENT_NAME>",
+    "options": {
+      "temperature": 0.2,
+      "top_p": 0.9
+    }
+  },
+  "instructions": "You are a Predictive Prevention Agent.\n\nROLE:\nIdentify emerging patterns that indicate future risk of shrink, mismatch, or process failure.\n\nINPUTS:\n- Historical anomalies\n- Store-level patterns\n- SKU-level trends\n\nTASKS:\n- Identify similar patterns across stores\n- Predict likelihood of recurrence\n- Recommend preventative actions\n\nOUTPUT FORMAT:\n- At-Risk Locations\n- Risk Drivers\n- Recommended Preventative Actions\n- Confidence Score",
+  "tools": [
+    {
+      "type": "code_interpreter",
+      "options": {
+        "file_ids": []
+      }
+    },
+    {
+      "type": "openapi",
+      "id": "forecast_features_api",
+      "description": "Fetches historical anomaly features, seasonality signals, staffing/shift proxies, and store attributes.",
+      "options": {
+        "specification": "<OPENAPI_OR_JSON_SCHEMA_STRING_HERE>",
+        "auth": {
+          "type": "managed_identity"
+        }
+      }
+    }
+  ]
+}
