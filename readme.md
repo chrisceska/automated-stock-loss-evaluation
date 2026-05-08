@@ -1,31 +1,61 @@
 # Automated Stock Loss Evaluation
 
-This repository contains the prompt set for an autonomous inventory reconciliation and stock loss prevention workflow.
+This repository defines a multi-agent workflow for autonomous inventory reconciliation and stock loss prevention in retail environments.
 
-The design models a multi-agent system that detects discrepancies, collects evidence, identifies likely root causes, decides the proper remediation path, executes approved actions, and recommends preventative controls.
+The solution is designed to detect discrepancies, gather grounded evidence, identify likely root causes, determine the right remediation path, execute approved actions, and continuously recommend preventative controls.
 
-![alt text](img/stocklossanalysissolution.png)
+![Autonomous inventory reconciliation architecture](img/stocklossanalysissolution.png)
 
+## Overview
+
+The architecture follows a closed-loop operational pattern:
+
+Detection -> Evidence -> Root Cause -> Decision -> Execution -> Prevention
+
+An orchestrator coordinates specialized agents so each step remains focused, auditable, and confidence-driven.
 
 ## Repository Structure
 
-- `prompts/`: Individual agent prompts and design reference material.
-- `readme.md`: Top-level overview of the project.
+- `prompts/`: Source prompt files for each agent plus a design summary.
+- `foundry/`: Azure AI Foundry agent definition files for the multi-agent system.
+- `img/`: Supporting diagrams and visual assets.
+- `README.md`: Root project overview.
 
-## Prompt Set
+## Prompt Catalog
 
-The prompt catalog is organized by agent responsibility:
+The `prompts/` folder contains the system prompt definitions for each role in the workflow:
 
-- `01-orchestrator-agent.md`: Coordinates the end-to-end workflow and determines next actions.
-- `02-anomaly-detection-agent.md`: Detects inventory discrepancies from operational data.
-- `03-root-cause-analysis-agent.md`: Produces ranked root cause hypotheses with confidence.
-- `04-evidence-collection-agent.md`: Retrieves and normalizes supporting records from source systems.
-- `05-decisioning-agent.md`: Chooses automation, partial automation, or escalation.
-- `06-execution-agent.md`: Executes approved workflow actions in downstream systems.
-- `07-preventative-intelligence-agent.md`: Identifies recurring patterns and preventative actions.
-- `08-design-summary.md`: Summarizes the architecture pattern and objective.
+- `01-orchestrator-agent.md`: Coordinates investigation, aggregates findings, and determines next steps.
+- `02-anomaly-detection-agent.md`: Detects inventory mismatches from POS, shipment, and inventory records.
+- `03-root-cause-analysis-agent.md`: Produces ranked root cause hypotheses with supporting evidence and confidence.
+- `04-evidence-collection-agent.md`: Retrieves and normalizes enterprise records used to ground decisions.
+- `05-decisioning-agent.md`: Applies confidence thresholds to choose automation, partial automation, or escalation.
+- `06-execution-agent.md`: Carries out approved downstream actions such as tickets, notifications, and workflows.
+- `07-preventative-intelligence-agent.md`: Identifies recurring patterns and recommends preventative action.
+- `08-design-summary.md`: Captures the architecture pattern and overall system objective.
 
-See `prompts/README.md` for the folder-level prompt descriptions.
+See `prompts/README.md` for the folder-level descriptions.
+
+## Foundry Assets
+
+The `foundry/` folder contains Azure AI Foundry agent definitions aligned to the same workflow:
+
+- `orchestrator.agent.json`
+- `anomaly-detection.agent.json`
+- `evidence-collector.agent.json`
+- `root-cause.agent.json`
+- `decisioning.agent.json`
+- `execution.agent.json`
+- `prevention.agent.json`
+
+These definitions are the deployable counterpart to the prompt files and are intended for use in an Azure AI Foundry project.
+
+## Operating Model
+
+- Use enterprise signals only: POS, ERP, WMS, logs, receipts, and related operational data.
+- Keep actions auditable and reversible.
+- Avoid direct financial adjustments.
+- Escalate to a human when confidence does not justify autonomy.
 
 ## Objective
 
