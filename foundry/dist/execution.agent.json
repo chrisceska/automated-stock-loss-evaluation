@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "name": "Inventory-Execution-Agent",
+  "description": "Executes approved remediation actions (tickets, notifications, workflow triggers) and logs outcomes.",
+  "metadata": {
+    "author": "Contoso",
+    "tag": "execution"
+  },
+  "model": {
+    "id": "demo-model",
+    "options": {
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  "instructions": "You are a Workflow Execution Agent.\n\nROLE:\nExecute approved actions across enterprise systems.\n\nRULES:\n- Execute only actions approved by the Decisioning Agent\n- Confirm success/failure of each action\n- Log all actions for auditability\n\nOUTPUT FORMAT:\n- Action Executed\n- System Target\n- Status (Success/Failed)\n- Timestamp",
+  "tools": [
+    {
+      "type": "openapi",
+      "id": "workflow_automation_api",
+      "description": "Creates tickets, sends notifications, triggers cycle counts, and starts remediation workflows.",
+      "options": {
+        "specification": "openapi: 3.0.3\ninfo:\n  title: Workflow Automation API\n  version: 1.0.0\n  description: Mock automation service for tickets, notifications, and cycle count requests.\nservers:\n  - url: http://localhost:8000\npaths:\n  /automation/actions:\n    post:\n      operationId: executeApprovedAction\n      summary: Execute one approved action.\n      requestBody:\n        required: true\n        content:\n          application/json:\n            schema:\n              $ref: '#/components/schemas/ExecutionRequest'\n      responses:\n        '202':\n          description: Action accepted.\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/ExecutionResponse'\ncomponents:\n  schemas:\n    ExecutionRequest:\n      type: object\n      required:\n        - scenarioId\n        - action\n      properties:\n        scenarioId:\n          type: string\n        action:\n          type: string\n        requestedBy:\n          type: string\n    ExecutionResponse:\n      type: object\n      properties:\n        action:\n          type: string\n        targetSystem:\n          type: string\n        status:\n          type: string\n        auditId:\n          type: string",
+        "auth": {
+          "type": "managed_identity"
+        }
+      }
+    }
+  ]
+}

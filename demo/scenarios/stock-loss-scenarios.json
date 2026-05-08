@@ -1,0 +1,164 @@
+{
+  "datasetVersion": "2026-05-08",
+  "currency": "USD",
+  "scenarios": [
+    {
+      "scenarioId": "store-201-pos-decrement-failure",
+      "title": "POS sold units without decrementing the on-hand balance",
+      "severity": "medium",
+      "storeId": "201",
+      "locationType": "store",
+      "sku": {
+        "skuId": "SKU-100245",
+        "name": "Contoso Energy Drink 12pk",
+        "category": "Beverages"
+      },
+      "timeWindow": {
+        "start": "2026-05-05T08:00:00Z",
+        "end": "2026-05-05T20:00:00Z"
+      },
+      "signals": {
+        "baselineExpectedOnHand": 42,
+        "recordedOnHand": 42,
+        "computedOnHandFromSales": 30,
+        "varianceUnits": 12,
+        "varianceAmount": 95.88,
+        "posTransactions": 12,
+        "shipmentReceipts": 0,
+        "inventoryAdjustments": 0,
+        "cycleCountRequested": false
+      },
+      "evidence": {
+        "erpInventoryRecordId": "ERP-INV-201-100245-20260505",
+        "wmsLedgerEntryIds": [
+          "WMS-LEDGER-778201",
+          "WMS-LEDGER-778202"
+        ],
+        "posReceiptIds": [
+          "POS-201-55601",
+          "POS-201-55604",
+          "POS-201-55608"
+        ],
+        "incidentNotes": [
+          "Lane 4 scanner service restarted at 12:41 local time.",
+          "No receiving activity or manual count recorded during the anomaly window."
+        ]
+      },
+      "expectedOutcome": {
+        "anomalyType": "missing_decrement",
+        "primaryRootCause": "POS integration failed to post stock decrements to the inventory system",
+        "confidenceBand": "high",
+        "decisionPath": "auto_execute_low_risk_actions",
+        "actions": [
+          "create_incident_ticket",
+          "notify_store_manager",
+          "trigger_cycle_count"
+        ]
+      }
+    },
+    {
+      "scenarioId": "store-118-receiving-gap",
+      "title": "Shipment appears received in WMS but not fully posted to store inventory",
+      "severity": "high",
+      "storeId": "118",
+      "locationType": "store",
+      "sku": {
+        "skuId": "SKU-220310",
+        "name": "Northwind Wireless Headphones",
+        "category": "Electronics"
+      },
+      "timeWindow": {
+        "start": "2026-05-04T09:00:00Z",
+        "end": "2026-05-06T18:00:00Z"
+      },
+      "signals": {
+        "baselineExpectedOnHand": 18,
+        "recordedOnHand": 18,
+        "computedOnHandFromReceiptsAndSales": 26,
+        "varianceUnits": -8,
+        "varianceAmount": -639.92,
+        "posTransactions": 2,
+        "shipmentReceipts": 1,
+        "inventoryAdjustments": 0,
+        "cycleCountRequested": false
+      },
+      "evidence": {
+        "shipmentId": "ASN-118-843991",
+        "receiptDocumentId": "RCV-118-10582",
+        "erpInventoryRecordId": "ERP-INV-118-220310-20260506",
+        "documentNotes": [
+          "Advanced shipment notice confirmed 8 units delivered.",
+          "Receiving confirmation exists in WMS but ERP posting timestamp is missing."
+        ],
+        "incidentNotes": [
+          "Backroom receiving tablet lost connectivity twice during morning unload."
+        ]
+      },
+      "expectedOutcome": {
+        "anomalyType": "receiving_posting_gap",
+        "primaryRootCause": "Receiving event was captured in WMS but not synchronized to ERP inventory",
+        "confidenceBand": "medium",
+        "decisionPath": "partial_automation_with_review",
+        "actions": [
+          "create_incident_ticket",
+          "notify_store_manager",
+          "request_human_review"
+        ]
+      }
+    },
+    {
+      "scenarioId": "store-044-recurring-shrink-pattern",
+      "title": "Recurring weekend shrink pattern across a high-risk SKU family",
+      "severity": "high",
+      "storeId": "044",
+      "locationType": "store",
+      "sku": {
+        "skuId": "SKU-880041",
+        "name": "Adventure Works Razor Cartridge 8ct",
+        "category": "Personal Care"
+      },
+      "timeWindow": {
+        "start": "2026-04-01T00:00:00Z",
+        "end": "2026-05-05T23:59:59Z"
+      },
+      "signals": {
+        "historicalAnomalies": 5,
+        "repeatWindowDays": 35,
+        "varianceUnits": 19,
+        "varianceAmount": 436.81,
+        "posTransactions": 9,
+        "shipmentReceipts": 2,
+        "inventoryAdjustments": 1,
+        "cycleCountRequested": true
+      },
+      "evidence": {
+        "priorIncidentIds": [
+          "INC-044-1042",
+          "INC-044-1088",
+          "INC-044-1114"
+        ],
+        "shiftPattern": "Saturday evening and Sunday opening",
+        "storeAttributes": {
+          "selfCheckoutLanes": 6,
+          "highShrinkCategory": true,
+          "lockboxCoverage": false
+        },
+        "incidentNotes": [
+          "Cycle counts repeatedly recover fewer units than book inventory suggests.",
+          "Loss pattern clusters around weekend labor shortages."
+        ]
+      },
+      "expectedOutcome": {
+        "anomalyType": "recurring_shrink_risk",
+        "primaryRootCause": "Likely operational shrink driven by repeated weekend control gaps",
+        "confidenceBand": "medium",
+        "decisionPath": "escalate_with_prevention_actions",
+        "actions": [
+          "create_incident_ticket",
+          "flag_recurring_issue_pattern",
+          "recommend_preventative_controls"
+        ]
+      }
+    }
+  ]
+}

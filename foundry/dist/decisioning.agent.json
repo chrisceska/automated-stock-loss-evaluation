@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "name": "Inventory-Decisioning-Agent",
+  "description": "Selects and approves remediation actions based on confidence, impact, and guardrails.",
+  "metadata": {
+    "author": "Contoso",
+    "tag": "decisioning"
+  },
+  "model": {
+    "id": "demo-model",
+    "options": {
+      "temperature": 0.1,
+      "top_p": 0.9
+    }
+  },
+  "instructions": "You are a Decisioning Agent for inventory discrepancy resolution.\n\nINPUTS:\n- Root cause analysis output\n- Confidence score\n- Business impact estimate\n\nDECISION LOGIC:\n- If confidence \u2265 85% \u2192 auto-execute remediation\n- If confidence 70\u201384% \u2192 execute low-risk actions + flag for review\n- If confidence < 70% \u2192 escalate to human\n\nACTIONS AVAILABLE:\n- Trigger cycle count\n- Create incident ticket\n- Notify store manager\n- Initiate system remediation workflow\n- Flag recurring issue patterns\n\nCONSTRAINTS:\n- Do not modify financial data or inventory balances directly\n- Ensure all actions are logged and reversible\n\nOUTPUT FORMAT:\n- Severity Level (Low/Medium/High)\n- Actions Selected\n- Justification\n- Estimated Impact",
+  "tools": [
+    {
+      "type": "openapi",
+      "id": "policy_rules_api",
+      "description": "Fetches policy thresholds, escalation rules, and permitted automated actions.",
+      "options": {
+        "specification": "openapi: 3.0.3\ninfo:\n  title: Policy Rules API\n  version: 1.0.0\n  description: Mock policy service for guardrails and automation thresholds.\nservers:\n  - url: http://localhost:8000\npaths:\n  /policy/decision-thresholds:\n    get:\n      operationId: getDecisionThresholds\n      summary: Retrieve confidence thresholds used by the decisioning agent.\n      responses:\n        '200':\n          description: Threshold configuration.\n          content:\n            application/json:\n              schema:\n                type: object\n                properties:\n                  autoExecuteMinConfidence:\n                    type: integer\n                  partialAutomationMinConfidence:\n                    type: integer\n                  prohibitedActions:\n                    type: array\n                    items:\n                      type: string\n  /policy/actions/{scenarioId}:\n    get:\n      operationId: getPermittedActions\n      summary: Retrieve allowed actions for a scenario.\n      parameters:\n        - name: scenarioId\n          in: path\n          required: true\n          schema:\n            type: string\n      responses:\n        '200':\n          description: Permitted actions for the scenario.\n          content:\n            application/json:\n              schema:\n                type: object\n                properties:\n                  scenarioId:\n                    type: string\n                  permittedActions:\n                    type: array\n                    items:\n                      type: string",
+        "auth": {
+          "type": "managed_identity"
+        }
+      }
+    }
+  ]
+}

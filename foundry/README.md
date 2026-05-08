@@ -131,6 +131,14 @@ Typical APIs:
 *   Incident management (ServiceNow)
 *   Workflow automation
 
+Sample tool contracts for a live demo are included in the repo under `openapi/`:
+
+*   `inventory-signals-api.yaml`
+*   `inventory-evidence-api.yaml`
+*   `policy-rules-api.yaml`
+*   `workflow-automation-api.yaml`
+*   `forecast-features-api.yaml`
+
 ***
 
 Step 4 – Deploy Agents
@@ -146,6 +154,22 @@ Option B – VS Code Foundry Toolkit
 *   Open project
 *   Add agent definition
 *   Deploy to environment
+
+## Bundling Repo Assets For Foundry
+
+The checked-in agent files remain source templates. To produce deployable versions with inlined OpenAPI definitions, run:
+
+```powershell
+python scripts/build_foundry_assets.py --model-deployment <MODEL_DEPLOYMENT> --vector-store-id <VECTOR_STORE_ID> --api-base-url <API_BASE_URL>
+```
+
+This writes Foundry-ready files to `foundry/dist/`.
+
+The output directory also includes `import-manifest.json`, which records the generated environment values and the recommended import order.
+
+For local testing, start the mock service in `mock-api/` and use `http://localhost:8000` as the API base URL.
+
+For the full import workflow, use `foundry/import-runbook.md`.
 
 ***
 
@@ -241,8 +265,9 @@ This solution enables a shift from manual, reactive reconciliation to autonomous
 # Next Steps
 
 *   Deploy agents into an Azure AI Foundry project
-*   Connect to sample retail data
-*   Run a simulated discrepancy scenario
+*   Connect the tool definitions to the sample contracts in `openapi/`
+*   Load the synthetic scenarios from `demo/scenarios/stock-loss-scenarios.json`
+*   Run the scenarios and compare outputs with `demo/evaluations/expected-outcomes.md`
 
 ***
 

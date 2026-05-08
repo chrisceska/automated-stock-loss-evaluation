@@ -1,0 +1,54 @@
+openapi: 3.0.3
+info:
+  title: Inventory Evidence API
+  version: 1.0.0
+  description: Mock evidence retrieval API for Foundry-based discrepancy investigations.
+servers:
+  - url: https://example.contoso.local
+paths:
+  /evidence/scenarios/{scenarioId}:
+    get:
+      operationId: getScenarioEvidence
+      summary: Fetch normalized evidence for a scenario.
+      parameters:
+        - name: scenarioId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Evidence package.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvidencePackage'
+components:
+  schemas:
+    EvidencePackage:
+      type: object
+      properties:
+        scenarioId:
+          type: string
+        dataSourcesQueried:
+          type: array
+          items:
+            type: string
+        keyRecords:
+          type: array
+          items:
+            type: object
+            properties:
+              recordId:
+                type: string
+              sourceSystem:
+                type: string
+              timestamp:
+                type: string
+                format: date-time
+        summary:
+          type: string
+        dataQualityNotes:
+          type: array
+          items:
+            type: string

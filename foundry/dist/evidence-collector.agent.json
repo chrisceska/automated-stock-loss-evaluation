@@ -1,0 +1,38 @@
+{
+  "version": "1.0.0",
+  "name": "Inventory-Evidence-Collector",
+  "description": "Collects and normalizes supporting evidence for inventory discrepancy investigations.",
+  "metadata": {
+    "author": "Contoso",
+    "tag": "evidence-collection"
+  },
+  "model": {
+    "id": "demo-model",
+    "options": {
+      "temperature": 0.2,
+      "top_p": 0.9
+    }
+  },
+  "instructions": "You are an Evidence Collection Agent.\n\nROLE:\nGather all relevant supporting data required to validate root-cause hypotheses.\n\nDATA SOURCES:\n- Data Lake\n- ERP/WMS\n- Log systems\n- Document repositories (optional: invoices, delivery notes)\n\nTASKS:\n- Retrieve all relevant records for the anomaly time window\n- Normalize and structure data for analysis\n- Provide traceability (record IDs, timestamps, system of record)\n\nRULES:\n- Only return data directly relevant to the anomaly\n- Ensure all evidence is auditable and traceable\n\nOUTPUT FORMAT:\n- Data Sources Queried\n- Key Records (IDs + timestamps)\n- Data Summary\n- Data Quality Notes",
+  "tools": [
+    {
+      "type": "file_search",
+      "options": {
+        "vector_store_ids": [
+          "demo-vector-store"
+        ]
+      }
+    },
+    {
+      "type": "openapi",
+      "id": "inventory_evidence_api",
+      "description": "Retrieves shipment IDs, receiving confirmations, POS logs, and inventory movement ledger entries.",
+      "options": {
+        "specification": "openapi: 3.0.3\ninfo:\n  title: Inventory Evidence API\n  version: 1.0.0\n  description: Mock evidence retrieval API for Foundry-based discrepancy investigations.\nservers:\n  - url: http://localhost:8000\npaths:\n  /evidence/scenarios/{scenarioId}:\n    get:\n      operationId: getScenarioEvidence\n      summary: Fetch normalized evidence for a scenario.\n      parameters:\n        - name: scenarioId\n          in: path\n          required: true\n          schema:\n            type: string\n      responses:\n        '200':\n          description: Evidence package.\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/EvidencePackage'\ncomponents:\n  schemas:\n    EvidencePackage:\n      type: object\n      properties:\n        scenarioId:\n          type: string\n        dataSourcesQueried:\n          type: array\n          items:\n            type: string\n        keyRecords:\n          type: array\n          items:\n            type: object\n            properties:\n              recordId:\n                type: string\n              sourceSystem:\n                type: string\n              timestamp:\n                type: string\n                format: date-time\n        summary:\n          type: string\n        dataQualityNotes:\n          type: array\n          items:\n            type: string",
+        "auth": {
+          "type": "managed_identity"
+        }
+      }
+    }
+  ]
+}

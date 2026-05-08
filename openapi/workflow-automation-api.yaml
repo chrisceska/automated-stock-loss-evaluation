@@ -1,0 +1,50 @@
+openapi: 3.0.3
+info:
+  title: Workflow Automation API
+  version: 1.0.0
+  description: Mock automation service for tickets, notifications, and cycle count requests.
+servers:
+  - url: https://example.contoso.local
+paths:
+  /automation/actions:
+    post:
+      operationId: executeApprovedAction
+      summary: Execute one approved action.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExecutionRequest'
+      responses:
+        '202':
+          description: Action accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionResponse'
+components:
+  schemas:
+    ExecutionRequest:
+      type: object
+      required:
+        - scenarioId
+        - action
+      properties:
+        scenarioId:
+          type: string
+        action:
+          type: string
+        requestedBy:
+          type: string
+    ExecutionResponse:
+      type: object
+      properties:
+        action:
+          type: string
+        targetSystem:
+          type: string
+        status:
+          type: string
+        auditId:
+          type: string

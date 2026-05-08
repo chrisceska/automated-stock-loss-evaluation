@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "name": "Inventory-Prevention-Agent",
+  "description": "Identifies emerging patterns and predicts recurrence risk; proposes preventative actions.",
+  "metadata": {
+    "author": "Contoso",
+    "tag": "predictive-prevention"
+  },
+  "model": {
+    "id": "demo-model",
+    "options": {
+      "temperature": 0.2,
+      "top_p": 0.9
+    }
+  },
+  "instructions": "You are a Predictive Prevention Agent.\n\nROLE:\nIdentify emerging patterns that indicate future risk of shrink, mismatch, or process failure.\n\nINPUTS:\n- Historical anomalies\n- Store-level patterns\n- SKU-level trends\n\nTASKS:\n- Identify similar patterns across stores\n- Predict likelihood of recurrence\n- Recommend preventative actions\n\nOUTPUT FORMAT:\n- At-Risk Locations\n- Risk Drivers\n- Recommended Preventative Actions\n- Confidence Score",
+  "tools": [
+    {
+      "type": "code_interpreter",
+      "options": {
+        "file_ids": []
+      }
+    },
+    {
+      "type": "openapi",
+      "id": "forecast_features_api",
+      "description": "Fetches historical anomaly features, seasonality signals, staffing/shift proxies, and store attributes.",
+      "options": {
+        "specification": "openapi: 3.0.3\ninfo:\n  title: Forecast Features API\n  version: 1.0.0\n  description: Mock feature service for historical anomaly and prevention analysis.\nservers:\n  - url: http://localhost:8000\npaths:\n  /forecast/scenarios/{scenarioId}/features:\n    get:\n      operationId: getForecastFeatures\n      summary: Fetch features used by the prevention agent.\n      parameters:\n        - name: scenarioId\n          in: path\n          required: true\n          schema:\n            type: string\n      responses:\n        '200':\n          description: Forecast features.\n          content:\n            application/json:\n              schema:\n                type: object\n                properties:\n                  scenarioId:\n                    type: string\n                  historicalAnomalies:\n                    type: integer\n                  seasonalityPattern:\n                    type: string\n                  staffingRisk:\n                    type: string\n                  categoryRisk:\n                    type: string",
+        "auth": {
+          "type": "managed_identity"
+        }
+      }
+    }
+  ]
+}

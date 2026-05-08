@@ -18,6 +18,11 @@ An orchestrator coordinates specialized agents so each step remains focused, aud
 
 - `prompts/`: Source prompt files for each agent plus a design summary.
 - `foundry/`: Azure AI Foundry agent definition files for the multi-agent system.
+- `demo/`: Synthetic scenarios and validation baselines for a Foundry demo.
+- `openapi/`: Mock OpenAPI tool contracts for the agents' external dependencies.
+- `mock-api/`: FastAPI service that serves the synthetic scenarios through live endpoints.
+- `stockloss_demo_api/`: Shared API implementation used by local FastAPI and Azure Functions.
+- `scripts/`: Utility scripts for preparing deployable Foundry assets.
 - `img/`: Supporting diagrams and visual assets.
 - `README.md`: Root project overview.
 
@@ -49,6 +54,29 @@ The `foundry/` folder contains Azure AI Foundry agent definitions aligned to the
 - `prevention.agent.json`
 
 These definitions are the deployable counterpart to the prompt files and are intended for use in an Azure AI Foundry project.
+
+## Demo Starter Kit
+
+The repository now includes a minimal demo slice so the multi-agent design can be exercised with synthetic retail data:
+
+- `demo/scenarios/stock-loss-scenarios.json`: three discrepancy scenarios with grounded signals, evidence, and expected outcomes.
+- `demo/evaluations/expected-outcomes.md`: validation targets for the agents.
+- `openapi/*.yaml`: mock tool contracts for signals, evidence retrieval, policy rules, workflow automation, and prevention features.
+
+The most direct first run is `store-201-pos-decrement-failure`, followed by the receiving gap and recurring shrink scenarios.
+
+## Runtime Path
+
+To run the demo end to end:
+
+1. Start the mock API in `mock-api/`.
+2. Bundle the Foundry agent definitions with `scripts/build_foundry_assets.py`.
+3. Import the generated agent files from `foundry/dist/` into Azure AI Foundry.
+4. Run each scenario and compare the outputs to `demo/evaluations/expected-outcomes.md`.
+
+To score the live API or captured Foundry outputs, run `scripts/evaluate_demo.py`. See `demo/evaluations/README.md` for examples.
+
+To host the demo API on Azure Functions, use `function_app.py`, `host.json`, and `requirements.txt`. Deployment steps are in `mock-api/azure-functions.md`.
 
 ## Operating Model
 

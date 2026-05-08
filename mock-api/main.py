@@ -1,0 +1,1 @@
+from stockloss_demo_api.app import app

@@ -1,0 +1,24 @@
+{
+  "generatedAtUtc": "2026-05-08T17:20:19.606379+00:00",
+  "modelDeployment": "demo-model",
+  "vectorStoreId": "demo-vector-store",
+  "apiBaseUrl": "http://localhost:8000",
+  "importOrder": [
+    "anomaly-detection.agent.json",
+    "evidence-collector.agent.json",
+    "root-cause.agent.json",
+    "decisioning.agent.json",
+    "execution.agent.json",
+    "prevention.agent.json",
+    "orchestrator.agent.json"
+  ],
+  "files": [
+    "orchestrator.agent.json",
+    "anomaly-detection.agent.json",
+    "evidence-collector.agent.json",
+    "root-cause.agent.json",
+    "decisioning.agent.json",
+    "execution.agent.json",
+    "prevention.agent.json"
+  ]
+}

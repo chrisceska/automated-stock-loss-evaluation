@@ -1,0 +1,72 @@
+openapi: 3.0.3
+info:
+  title: Inventory Signals API
+  version: 1.0.0
+  description: Mock signals API for the stock loss demo scenarios.
+servers:
+  - url: https://example.contoso.local
+paths:
+  /signals/scenarios:
+    get:
+      operationId: listSignalScenarios
+      summary: List available signal scenarios.
+      responses:
+        '200':
+          description: Available scenarios.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scenarioIds:
+                    type: array
+                    items:
+                      type: string
+  /signals/scenarios/{scenarioId}:
+    get:
+      operationId: getSignalScenario
+      summary: Get signal data for one scenario.
+      parameters:
+        - name: scenarioId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Scenario signal details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignalScenario'
+components:
+  schemas:
+    SignalScenario:
+      type: object
+      required:
+        - scenarioId
+        - storeId
+        - skuId
+        - varianceUnits
+      properties:
+        scenarioId:
+          type: string
+        storeId:
+          type: string
+        skuId:
+          type: string
+        anomalyType:
+          type: string
+        varianceUnits:
+          type: number
+        varianceAmount:
+          type: number
+        timeWindow:
+          type: object
+          properties:
+            start:
+              type: string
+              format: date-time
+            end:
+              type: string
+              format: date-time

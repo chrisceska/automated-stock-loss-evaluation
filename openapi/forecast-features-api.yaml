@@ -1,0 +1,36 @@
+openapi: 3.0.3
+info:
+  title: Forecast Features API
+  version: 1.0.0
+  description: Mock feature service for historical anomaly and prevention analysis.
+servers:
+  - url: https://example.contoso.local
+paths:
+  /forecast/scenarios/{scenarioId}/features:
+    get:
+      operationId: getForecastFeatures
+      summary: Fetch features used by the prevention agent.
+      parameters:
+        - name: scenarioId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Forecast features.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scenarioId:
+                    type: string
+                  historicalAnomalies:
+                    type: integer
+                  seasonalityPattern:
+                    type: string
+                  staffingRisk:
+                    type: string
+                  categoryRisk:
+                    type: string

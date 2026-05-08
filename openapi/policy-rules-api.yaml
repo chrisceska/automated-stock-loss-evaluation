@@ -1,0 +1,52 @@
+openapi: 3.0.3
+info:
+  title: Policy Rules API
+  version: 1.0.0
+  description: Mock policy service for guardrails and automation thresholds.
+servers:
+  - url: https://example.contoso.local
+paths:
+  /policy/decision-thresholds:
+    get:
+      operationId: getDecisionThresholds
+      summary: Retrieve confidence thresholds used by the decisioning agent.
+      responses:
+        '200':
+          description: Threshold configuration.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  autoExecuteMinConfidence:
+                    type: integer
+                  partialAutomationMinConfidence:
+                    type: integer
+                  prohibitedActions:
+                    type: array
+                    items:
+                      type: string
+  /policy/actions/{scenarioId}:
+    get:
+      operationId: getPermittedActions
+      summary: Retrieve allowed actions for a scenario.
+      parameters:
+        - name: scenarioId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Permitted actions for the scenario.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scenarioId:
+                    type: string
+                  permittedActions:
+                    type: array
+                    items:
+                      type: string

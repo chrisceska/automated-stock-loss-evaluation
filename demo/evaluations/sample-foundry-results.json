@@ -1,0 +1,38 @@
+[
+  {
+    "scenarioId": "store-201-pos-decrement-failure",
+    "anomalyType": "missing_decrement",
+    "primaryRootCause": "POS integration failed to post stock decrements to the inventory system",
+    "confidenceBand": "high",
+    "decisionPath": "auto_execute_low_risk_actions",
+    "actions": [
+      "create_incident_ticket",
+      "notify_store_manager",
+      "trigger_cycle_count"
+    ]
+  },
+  {
+    "scenarioId": "store-118-receiving-gap",
+    "anomalyType": "receiving_posting_gap",
+    "primaryRootCause": "Receiving event was captured in WMS but not synchronized to ERP inventory",
+    "confidence": 78,
+    "decisionPath": "partial_automation_with_review",
+    "actionsSelected": [
+      "create_incident_ticket",
+      "notify_store_manager",
+      "request_human_review"
+    ]
+  },
+  {
+    "scenarioId": "store-044-recurring-shrink-pattern",
+    "anomalyType": "recurring_shrink_risk",
+    "primaryRootCause": "Likely operational shrink driven by repeated weekend control gaps",
+    "confidenceBand": "medium",
+    "decisionPath": "escalate_with_prevention_actions",
+    "actions": [
+      "create_incident_ticket",
+      "flag_recurring_issue_pattern",
+      "recommend_preventative_controls"
+    ]
+  }
+]
